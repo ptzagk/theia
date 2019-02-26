@@ -20,7 +20,6 @@ import { UriAwareCommandHandler, UriCommandHandler } from '@theia/core/lib/commo
 import URI from '@theia/core/lib/common/uri';
 import { SelectionService } from '@theia/core';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
-import { SelectionContext } from '../../common/selection-context';
 
 export namespace SelectionProviderCommands {
     export const GET_SELECTED_CONTEXT: Command = {
@@ -38,15 +37,14 @@ export class SelectionProviderCommandContribution implements CommandContribution
     registerCommands(commands: CommandRegistry): void {
         commands.registerCommand(SelectionProviderCommands.GET_SELECTED_CONTEXT, this.newMultiUriAwareCommandHandler({
             isEnabled: () => true,
-            isVisible: () => true,
+            isVisible: () => false,
             execute: selectedUris => {
                 const rootUris = this.workspaceService.tryGetRoots().map(root => new URI(root.uri));
 
-                const context: SelectionContext = {
+                return {
                     selectedPaths: selectedUris,
                     workspaceRoots: rootUris
                 };
-                return context;
             }
         }));
     }
